@@ -33,6 +33,7 @@ class ProductsController < ApplicationController
 
 	    respond_to do |format|
 			format.js  { render 'index.js.erb' }
+			format.json { render json: @products }
 			format.html
 		end
 	end
@@ -44,7 +45,12 @@ class ProductsController < ApplicationController
 
 	# GET /categories/:category_id/products/:id
 	def show
-		@product
+		respond_to do |format|
+			format.js  { render 'index.js.erb' }
+			format.json { render json: @product }
+			format.html
+		end
+		#@product
 	end
 
 	# POST /categories/:category_id/products
