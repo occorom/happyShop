@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <style type="text/css">
+    	.sidebar {
+    		width: 25%;
+    		position: absolute;
+    		padding: 20px;
+    	}
+		.flex-container {
+			display: flex;
+			flex-wrap: wrap;
+			align-content: space-between;
+			padding: 10px;
+		}
+
+		.flex-container > div {
+			/*background-color: #f1f1f1;*/
+			width: 25%;
+			margin: 10px;
+		}
+
+    	.product {
+    		min-height: 200px;
+		 	text-align: center;
+    		border: black;
+    		border-style: solid;
+    		padding: 10px;
+    		margin: 10px;
+    	}
+    	.label {
+			display: block;
+			cursor: pointer;
+    	}
+    	/*.order {
+		    margin-left: 75%;
+    	}*/
+    	.title {
+			display: block;
+			cursor: pointer;
+			text-decoration: underline;
+			font-family: fantasy;
+			font-weight: 400;
+			font-size: 13px;
+			letter-spacing: 1px;
+    	}
+    	.desc {
+    		font-size: 12px;
+    	}
+    	#carousel {
+		    height: 20%;
+		    width: 50%;
+    	}
+    </style>
+
+<body>
+
+
+<div class="sidebar">
+	<h1>Happy Shop</h1>
+
+	<div>
+		<span class="title">CATEGORIES</span>
+		<label class= "label"><input type="checkbox" name="categories" value="1"> Perfume Homme<label><br>
+		<label class= "label"><input type="checkbox" name="categories" value="2"> Perfume Femme<label><br>
+		<label class= "label"><input type="checkbox" name="categories" value="3"> Eau de toilette Homme<label><br>
+		<label class= "label"><input type="checkbox" name="categories" value="4"> Eau de toilette Femme<label><br>
+	</div><br><br><br>
+	<div>
+		<span class="title">PRICE</span>
+		<label class= "label"><input type="checkbox" name="price-range" value="0, 25"> Under $25<label><br>
+		<label class= "label"><input type="checkbox" name="price-range" value="25, 50"> $25 - $50<label><br>
+		<label class= "label"><input type="checkbox" name="price-range" value="50, 75"> $50 - $75<label><br>
+		<label class= "label"><input type="checkbox" name="price-range" value="75, 100"> $75 - $100<label><br>
+		<label class= "label"><input type="checkbox" name="price-range" value="100, 150"> $100 - $150<label><br>
+		<label class= "label"><input type="checkbox" name="price-range" value="150, 200"> $150 - $200<label><br>
+	</div><br><br><br>
+	<div class="order title">
+		order price by <%= select_tag "order", options_for_select([ "asc", "desc" ], "asc") %>
+	</div>
+	<br>
+	<br>
+
+	<button onclick='ajax()'>Search</button>
+</div>
+<div class="results" id="products" style="margin-left:25%">
+    <div id="pages-products" class ="flex-container">
+     	<% @products.each_with_index do |product, index| %>
+			<%= render product %>
+		<% end %>
+    </div>
+	<div id="paginator">
+		<%= paginate @products, remote: true %>
+	</div>
+	<div id="page_entries">
+		<%= page_entries_info @products %>
+	</div>
+</div>
+
+  <div id="id01" class="w3-modal">
+    <div class="w3-modal-content">
+      <div class="w3-container">
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+        <div id="modal_content"></div>
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+	// display modal for product
+	function displayProduct(pContent) {
+		console.log(pContent);
+		document.getElementById('id01').style.display='block';
+		var content = $('#' + pContent);
+		//$("").clone().appendTo( "#modal_content" );
+		$('#modal_content').html(content.clone());
+	}
+
+	// make ajax call
+   	function ajax(pUrl) {
+   		var min_prices = [], max_prices = [], categories = [];
+   		$("input:checkbox[name=price-range]:checked").each(function(){
+   			var min_max = $(this).val().split(', ');
+		    min_prices.push(parseInt(min_max[0]));
+		    max_prices.push(parseInt(min_max[1]));
+		});
+   		$("input:checkbox[name=categories]:checked").each(function(){
+		    categories.push(parseInt($(this).val()));
+		});
+		$.ajax({
+			url: pUrl ? pUrl : '/',
+			data: {category: categories, min_prices: min_prices, max_prices: max_prices, order: $( "#order" ).val()},
+			error: function (pData){
+				console.log(pData);
+			}
+	    });
+	};
+
+	// make pagination ajaxable
+	$(document.body).on('click', 'nav.pagination a', function(e) {
+    	e.preventDefault();
+    	ajax(($(this).attr("href")));
+  	});
+
+</script>
+
+</body>
+</html>

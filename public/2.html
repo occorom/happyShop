@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+
+<body>
+<h1>products1</h1>
+<%= paginate @products %>
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+    	callAjax();
+	});
+
+	function callAjax(pCategory, pMinPrice, pMaxPrice, pOrder) {
+		console.log('test')
+		$.ajax({
+		  url: '/products',
+	      type: 'GET',
+	      // category=1&min_price=11&max_price=16&order=asc
+	      data: {category: pCategory, min_price: pMinPrice, max_price: pMaxPrice, order: pOrder},
+	      success:function(pData){
+	        alert(pData);
+	       },
+	      error:function(){
+	        alert ("Something went wrong");
+	    	}
+	    });
+	}
+
+</script>
+
+</body>
+</html>

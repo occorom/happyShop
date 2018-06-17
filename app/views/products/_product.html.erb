@@ -1,0 +1,20 @@
+<div class="product" >
+
+	<div id= "product_<%=product.name.parameterize%>" />
+		<div> 
+	    	<img id="carousel" src="/images/<%= product.image %>" alt="Guerlain">
+		</div>
+		<div class="name">
+		  <p><%= product.name %></p>
+		</div>
+		<div class="desc">
+		  <p><%= product.description %></p>
+		  <p><%= product.price %></p>
+		</div>
+	</div>
+
+<button onclick="displayProduct('product_<%= product.name.parameterize %>');" class="w3-button w3-black">Display</button>
+
+
+
+</div>
